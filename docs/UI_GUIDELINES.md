@@ -27,9 +27,40 @@ Design patterns and best practices for the RV101's green monochrome waveguide di
 | Labels | 18sp | Medium | Button text, timestamps |
 | Minimum | 16sp | - | Only for non-critical info |
 
+### Font Selection (Tested 2026-02-01)
+
+Fonts tested on actual RV101 display. Selected based on readability and HUD aesthetic:
+
+| Use Case | Font | Rationale |
+|----------|------|-----------|
+| **Primary UI** | JetBrains Mono | Clean monospace, excellent readability, tech/HUD aesthetic |
+| **Headers/Accent** | Space Grotesk | Distinctive geometric sans, good contrast with mono |
+
+**Rejected alternatives:**
+- Roboto (default) - too generic, doesn't fit HUD aesthetic
+- Inter - too similar to Roboto on small display
+- Space Mono - less readable than JetBrains Mono
+
+### Font Loading
+
+**Important:** Use `assets/fonts/` folder with `Typeface.createFromAsset()` instead of `res/font` resources. The `res/font` approach has known issues with Jetpack Compose causing crashes.
+
+```kotlin
+// ✅ Correct: Load from assets
+val typeface = Typeface.createFromAsset(context.assets, "fonts/jetbrains_mono_bold.ttf")
+val fontFamily = FontFamily(androidx.compose.ui.text.font.Typeface(typeface))
+
+// ❌ Avoid: res/font resources in Compose (can cause crashes)
+// FontFamily(Font(R.font.jetbrains_mono_bold))
+```
+
 ### Code Example
 ```kotlin
 object GlassesTypography {
+    // Load fonts from assets in your Activity/Application
+    lateinit var primaryFont: FontFamily  // JetBrains Mono
+    lateinit var accentFont: FontFamily   // Space Grotesk
+
     val screenTitle = TextStyle(fontSize = 36.sp, fontWeight = Bold)
     val sectionHeader = TextStyle(fontSize = 28.sp, fontWeight = SemiBold)
     val body = TextStyle(fontSize = 22.sp, fontWeight = Normal)
@@ -253,9 +284,27 @@ fun GlassesLoadingIndicator() {
 }
 ```
 
+## Display Artifacts
+
+### Waveguide Ghosting (Discovered 2026-02-01)
+All elements show a faint "ghost" duplicate - a flipped, offset reflection caused by waveguide optics. This is a known hardware limitation of waveguide AR displays. **Ghost visibility scales with source brightness.**
+
+| Brightness | Ghost Visibility | Use Case |
+|------------|------------------|----------|
+| 100% (white) | Very noticeable | Primary content only, accept ghosting |
+| 80% (secondary) | Noticeable | Body text |
+| 40% (dim) | Faint but visible | Labels, timestamps |
+| **25% (veryDim)** | **Imperceptible** | **Status indicators, headers** |
+
+**Guidelines:**
+1. Use `GlassesColors.veryDim` (~25%) for status banners and peripheral info
+2. Accept some ghosting for primary content that needs to be highly readable
+3. Ghost follows the element (not position-fixed), so position doesn't help
+
 ## Anti-Patterns (Avoid These)
 
 ### Don't Do This
+- ❌ Bright text for secondary info - causes visible ghosting (use veryDim)
 - ❌ Small icons (< 24dp) - hard to see
 - ❌ Color-dependent information - display is monochrome
 - ❌ Dense layouts (> 6 items) - overwhelming

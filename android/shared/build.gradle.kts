@@ -1,28 +1,14 @@
 plugins {
-    id("com.android.application")
+    id("com.android.library")
     id("org.jetbrains.kotlin.android")
 }
 
 android {
-    namespace = "com.rokid.hellohud"
+    namespace = "com.rokid.shared"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.rokid.hellohud"
         minSdk = 32
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0.0"
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
     }
 
     compileOptions {
@@ -44,19 +30,11 @@ android {
 }
 
 dependencies {
-    // Shared module
-    implementation(project(":shared"))
-
     // Compose BOM
     implementation(platform("androidx.compose:compose-bom:2024.02.00"))
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-tooling-preview")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-
-    // Activity & Lifecycle
-    implementation("androidx.activity:activity-compose:1.8.2")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
 
     // Core
     implementation("androidx.core:core-ktx:1.12.0")

@@ -26,6 +26,16 @@ android/shared/
 
 Standard theme for all apps targeting the RV101's green monochrome display.
 
+### Font Assets
+
+Copy these font files to each app's `assets/fonts/` folder:
+- `jetbrains_mono_bold.ttf` - Primary UI font (monospace, tech aesthetic)
+- `space_grotesk_bold.ttf` - Headers/accent font (geometric sans)
+
+Source: `android/HelloHUD/app/src/main/assets/fonts/`
+
+**Important:** Use `Typeface.createFromAsset()` to load fonts. The `res/font` resource approach has known issues with Jetpack Compose causing crashes on some devices.
+
 ```kotlin
 object GlassesColors {
     val background = Color.Black
@@ -36,28 +46,55 @@ object GlassesColors {
     val dim = Color(0xFF666666)     // Dimmed text
 }
 
+object GlassesFonts {
+    private var _primaryFont: FontFamily? = null
+    private var _accentFont: FontFamily? = null
+
+    val primary: FontFamily get() = _primaryFont ?: FontFamily.Monospace
+    val accent: FontFamily get() = _accentFont ?: FontFamily.Default
+
+    fun init(context: Context) {
+        _primaryFont = loadFont(context, "fonts/jetbrains_mono_bold.ttf")
+        _accentFont = loadFont(context, "fonts/space_grotesk_bold.ttf")
+    }
+
+    private fun loadFont(context: Context, path: String): FontFamily? {
+        return try {
+            val typeface = Typeface.createFromAsset(context.assets, path)
+            FontFamily(androidx.compose.ui.text.font.Typeface(typeface))
+        } catch (e: Exception) {
+            Log.e("GlassesFonts", "Failed to load font: $path", e)
+            null
+        }
+    }
+}
+
 object GlassesTypography {
-    val displayLarge = TextStyle(
+    val displayLarge: TextStyle get() = TextStyle(
         fontSize = 36.sp,
         fontWeight = FontWeight.Bold,
+        fontFamily = GlassesFonts.accent,  // Space Grotesk for headers
         color = GlassesColors.foreground
     )
 
-    val headlineLarge = TextStyle(
+    val headlineLarge: TextStyle get() = TextStyle(
         fontSize = 28.sp,
         fontWeight = FontWeight.SemiBold,
+        fontFamily = GlassesFonts.accent,
         color = GlassesColors.foreground
     )
 
-    val bodyLarge = TextStyle(
+    val bodyLarge: TextStyle get() = TextStyle(
         fontSize = 22.sp,
         fontWeight = FontWeight.Normal,
+        fontFamily = GlassesFonts.primary,  // JetBrains Mono for body
         color = GlassesColors.foreground
     )
 
-    val labelLarge = TextStyle(
+    val labelLarge: TextStyle get() = TextStyle(
         fontSize = 18.sp,
         fontWeight = FontWeight.Medium,
+        fontFamily = GlassesFonts.primary,
         color = GlassesColors.foreground
     )
 }

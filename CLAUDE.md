@@ -49,9 +49,16 @@ rokid-apps/
 - [x] Phase 0: Connect RV101 via ADB, verify toolchain
 - [x] Phase 0: Document actual device specs (Android 12, SDK 32, 480x640)
 - [x] Phase 0: Deploy HelloHUD test app (2026-02-01)
+- [x] Font testing on device - selected JetBrains Mono & Space Grotesk (2026-02-01)
+- [x] Phase 1: Build shared UI components (2026-02-01)
+  - GlassesTheme, GlassesColors, GlassesFonts, GlassesTypography
+  - DpadNavigation modifier
+  - UI components: FocusableItem, GlassesButton, GlassesListItem, ConnectionStatusBanner
+  - UiState pattern with UiStateContainer
+  - VoiceCommandService interface
+  - HelloHUD updated to use shared module
 
 ### Pending
-- [ ] Build shared UI components (GlassesTheme, DpadNavigation)
 - [ ] NowCard MVP
 - [ ] ARPet MVP
 - [ ] Capture MVP
@@ -114,6 +121,23 @@ See [docs/DEPLOY_RV101.md](docs/DEPLOY_RV101.md) for detailed instructions.
 - **Focus states must be obvious**: Large highlight, no subtle hover effects
 - **Avoid**: Small icons, color-dependent UI, dense layouts, fine details
 
+## Design Decisions
+
+### Typography
+Tested fonts on actual RV101 display (2026-02-01). Selected fonts for GlassesTheme:
+
+| Use Case | Font | Notes |
+|----------|------|-------|
+| **Primary UI** | JetBrains Mono | Clean monospace, excellent readability, tech aesthetic |
+| **Headers/Accent** | Space Grotesk | Distinctive geometric sans, good contrast with mono |
+
+Font files located in `android/shared/src/main/assets/fonts/`. Load via `Typeface.createFromAsset()` - more reliable than `res/font` resources in Compose. Call `GlassesFonts.init(context)` in Activity onCreate before setContent.
+
+**Rejected alternatives:**
+- Roboto (default) - too generic, doesn't fit HUD aesthetic
+- Inter - too similar to Roboto on small display
+- Space Mono - less readable than JetBrains Mono
+
 ## Event Schema Summary (AgentHUD)
 
 Full schema in [docs/EVENT_SCHEMA.md](docs/EVENT_SCHEMA.md).
@@ -172,18 +196,23 @@ sdk.dir=/opt/homebrew/share/android-commandlinetools
 
 7. **SDK location**: Gradle needs `local.properties` with `sdk.dir` pointing to the Android SDK. Without Android Studio, SDK is at `/opt/homebrew/share/android-commandlinetools`.
 
+8. **Waveguide ghosting**: All UI elements show a ghost/reflection artifact (flipped, offset duplicate). This is a hardware limitation. Ghost visibility scales with brightness - use `GlassesColors.veryDim` (~25%) for status info to make ghosts imperceptible. Accept some ghosting for primary content.
+
 ## Next Milestone Roadmap
 
 ### ~~Phase 0~~ ✅ Complete (2026-02-01)
 - Device connected, specs collected
 - HelloHUD deployed and verified
 
-### Phase 1: Shared Components (Current)
-1. Create GlassesTheme (colors, typography)
-2. Create DpadNavigation modifier
-3. Create VoiceCommandService interface
+### ~~Phase 1~~ ✅ Complete (2026-02-01)
+- Shared module at `android/shared/`
+- GlassesTheme with colors, fonts, typography
+- DpadNavigation modifier for touchpad input
+- UI components: FocusableItem, GlassesButton, GlassesListItem, etc.
+- VoiceCommandService interface
+- HelloHUD updated and validated on device
 
-### Phase 2: NowCard
+### Phase 2: NowCard (Current)
 1. Sunsama/Notion API integration
 2. Pomodoro timer
 3. Task actions (done, skip, extend)

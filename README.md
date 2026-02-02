@@ -56,12 +56,12 @@ See [docs/SETUP_MACOS.md](docs/SETUP_MACOS.md) for detailed setup instructions.
 - HelloHUD deployed and running on RV101
 - Device specs: Android 12, SDK 32, 480x640, 240dpi
 
-### Phase 1: Shared Components (Current)
-1. Create `GlassesTheme` with typography and colors
-2. Create `DpadNavigation` modifier for touchpad input
-3. Create `VoiceCommandService` interface
+### ~~Phase 1: Shared Components~~ ✅ Complete
+- `android/shared/` module with GlassesTheme, DpadNavigation, UI components
+- Fonts: JetBrains Mono (primary) + Space Grotesk (headers)
+- HelloHUD updated to use shared module
 
-### Phase 2: First App (NowCard)
+### Phase 2: First App (NowCard) - Current
 1. Set up Sunsama or Notion API integration
 2. Build task display UI
 3. Add Pomodoro timer
