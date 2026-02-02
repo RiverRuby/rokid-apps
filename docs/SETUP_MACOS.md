@@ -18,9 +18,50 @@ adb version
 # Expected: Android Debug Bridge version X.X.X
 ```
 
-### 3. Install Android Studio (Optional but Recommended)
+### 3. Install Java Development Kit
 
-Download from: https://developer.android.com/studio
+Android development requires JDK 17+:
+```bash
+brew install openjdk@17
+```
+
+**Important**: Add to your `~/.zshrc` or `~/.bash_profile`:
+```bash
+export JAVA_HOME="/opt/homebrew/opt/openjdk@17"
+export PATH="$JAVA_HOME/bin:$PATH"
+```
+
+Then reload your shell:
+```bash
+source ~/.zshrc  # or source ~/.bash_profile
+```
+
+Verify:
+```bash
+java -version
+# Expected: openjdk version "17.x.x"
+```
+
+### 4. Install Android SDK (Command Line - No Android Studio)
+
+If you don't want to install Android Studio, you can use command line tools:
+
+```bash
+# Install command line tools
+brew install --cask android-commandlinetools
+
+# Accept licenses (run in a proper bash shell)
+/bin/bash -c 'export JAVA_HOME=/opt/homebrew/opt/openjdk@17 && yes | sdkmanager --licenses'
+
+# Install required SDK components
+/bin/bash -c 'export JAVA_HOME=/opt/homebrew/opt/openjdk@17 && sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"'
+```
+
+The SDK is installed at `/opt/homebrew/share/android-commandlinetools`.
+
+### 4b. Install Android Studio (Alternative)
+
+If you prefer a GUI, download Android Studio from: https://developer.android.com/studio
 
 Android Studio provides:
 - Gradle build system
@@ -28,20 +69,18 @@ Android Studio provides:
 - Layout inspector
 - Logcat viewer with filtering
 
-### 4. Install Java Development Kit
+The SDK will be at `~/Library/Android/sdk`.
 
-Android development requires JDK 17+:
+### 5. Configure SDK Path for Projects
+
+Each Android project needs a `local.properties` file pointing to the SDK:
+
 ```bash
-brew install openjdk@17
+# For command line tools installation:
+echo "sdk.dir=/opt/homebrew/share/android-commandlinetools" > android/HelloHUD/local.properties
 
-# Add to PATH (add to ~/.zshrc or ~/.bash_profile)
-export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
-```
-
-Verify:
-```bash
-java -version
-# Expected: openjdk version "17.x.x"
+# For Android Studio installation:
+echo "sdk.dir=$HOME/Library/Android/sdk" > android/HelloHUD/local.properties
 ```
 
 ## Hardware Requirements

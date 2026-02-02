@@ -4,22 +4,46 @@ A collection of lightweight, focused apps for Rokid RV101 smart glasses. Each ap
 
 ## Quick Start
 
-```bash
-# Prerequisites
-brew install android-platform-tools
+### First-Time Setup (No Android Studio Required)
 
+```bash
+# 1. Install tools
+brew install android-platform-tools
+brew install openjdk@17
+brew install --cask android-commandlinetools
+
+# 2. Add to ~/.zshrc (then restart terminal or run: source ~/.zshrc)
+export JAVA_HOME="/opt/homebrew/opt/openjdk@17"
+export PATH="$JAVA_HOME/bin:$PATH"
+
+# 3. Install Android SDK components
+/bin/bash -c 'export JAVA_HOME=/opt/homebrew/opt/openjdk@17 && yes | sdkmanager --licenses'
+/bin/bash -c 'export JAVA_HOME=/opt/homebrew/opt/openjdk@17 && sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"'
+
+# 4. Create local.properties in each app (points to SDK location)
+echo "sdk.dir=/opt/homebrew/share/android-commandlinetools" > android/HelloHUD/local.properties
+```
+
+### Build and Deploy
+
+```bash
 # Connect RV101 via 5-pin dev cable and verify
 adb devices -l
 
-# Install and launch an app
-./tools/install.sh HelloHUD
+# Build and install an app
+cd android/HelloHUD
+./gradlew assembleDebug
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+adb shell am start -n com.rokid.hellohud/.MainActivity
 ```
+
+See [docs/SETUP_MACOS.md](docs/SETUP_MACOS.md) for detailed setup instructions.
 
 ## App Portfolio
 
 | App | Status | Description |
 |-----|--------|-------------|
-| **HelloHUD** | 🔨 Phase 0 | Device validation test app |
+| **HelloHUD** | ✅ Complete | Device validation test app |
 | **NowCard** | 📋 Planned | Current task from Sunsama/Notion + Pomodoro timer |
 | **ARPet** | 📋 Planned | Pixel art Tamagotchi connected to habit tracker |
 | **Capture** | 📋 Planned | Quick camera capture for food/fashion logging |
@@ -28,15 +52,11 @@ adb devices -l
 
 ## Next Steps
 
-### Phase 0: Device Validation
-1. Connect RV101 via 5-pin development cable
-2. Run `./tools/device_info.sh` to collect device specs
-3. Create HelloHUD Android project in `android/HelloHUD/`
-4. Deploy with `./tools/install.sh HelloHUD`
-5. Verify text is readable on glasses display
-6. Update `docs/DEPLOY_RV101.md` with actual device values (Android version, SDK, resolution)
+### ~~Phase 0: Device Validation~~ ✅ Complete
+- HelloHUD deployed and running on RV101
+- Device specs: Android 12, SDK 32, 480x640, 240dpi
 
-### Phase 1: Shared Components
+### Phase 1: Shared Components (Current)
 1. Create `GlassesTheme` with typography and colors
 2. Create `DpadNavigation` modifier for touchpad input
 3. Create `VoiceCommandService` interface
@@ -94,10 +114,11 @@ rokid-apps/
 ## Device Specs (RV101)
 
 - **Processor**: Qualcomm Snapdragon AR1
-- **Display**: Green monochrome waveguide
+- **OS**: Android 12 (SDK 32)
+- **Display**: Green monochrome waveguide, 480x640, 240dpi
 - **Camera**: 12MP Sony IMX681, 109° FOV
+- **CPU**: arm64-v8a
 - **Weight**: 49 grams
-- **OS**: YodaOS (Android variant)
 
 ## License
 

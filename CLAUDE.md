@@ -130,6 +130,32 @@ Full schema in [docs/EVENT_SCHEMA.md](docs/EVENT_SCHEMA.md).
 - `ERROR` - Encountered error (actions: ack, retry)
 - `DONE` - Task completed (no actions)
 
+## Development Environment Setup
+
+**Required tools** (install via Homebrew):
+```bash
+brew install android-platform-tools   # ADB
+brew install openjdk@17               # Java 17 (required for Android)
+brew install --cask android-commandlinetools  # Android SDK
+```
+
+**Environment variables** (add to `~/.zshrc`):
+```bash
+export JAVA_HOME="/opt/homebrew/opt/openjdk@17"
+export PATH="$JAVA_HOME/bin:$PATH"
+```
+
+**SDK setup** (one-time):
+```bash
+/bin/bash -c 'export JAVA_HOME=/opt/homebrew/opt/openjdk@17 && yes | sdkmanager --licenses'
+/bin/bash -c 'export JAVA_HOME=/opt/homebrew/opt/openjdk@17 && sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"'
+```
+
+**Per-project**: Create `local.properties` with SDK path:
+```
+sdk.dir=/opt/homebrew/share/android-commandlinetools
+```
+
 ## Known Issues and Gotchas
 
 1. **3-pin vs 5-pin cable**: The standard charging cable (3-pin) does NOT support ADB. You must use the development cable (5-pin, $39.99).
@@ -142,15 +168,17 @@ Full schema in [docs/EVENT_SCHEMA.md](docs/EVENT_SCHEMA.md).
 
 5. **YodaOS compatibility**: ~90% Android app compatible, but some APIs may behave differently. Test on device early.
 
+6. **Java version**: Must use Java 17+. The system Java 8 won't work. Always set `JAVA_HOME` before running Gradle.
+
+7. **SDK location**: Gradle needs `local.properties` with `sdk.dir` pointing to the Android SDK. Without Android Studio, SDK is at `/opt/homebrew/share/android-commandlinetools`.
+
 ## Next Milestone Roadmap
 
-### Phase 0 (Next Session)
-1. Connect RV101 via ADB
-2. Run `tools/device_info.sh` to collect specs
-3. Build and deploy HelloHUD
-4. Update DEPLOY_RV101.md with real findings
+### ~~Phase 0~~ ✅ Complete (2026-02-01)
+- Device connected, specs collected
+- HelloHUD deployed and verified
 
-### Phase 1: Shared Components
+### Phase 1: Shared Components (Current)
 1. Create GlassesTheme (colors, typography)
 2. Create DpadNavigation modifier
 3. Create VoiceCommandService interface
