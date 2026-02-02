@@ -46,11 +46,11 @@ rokid-apps/
 - [x] Create repository structure
 - [x] Write all documentation files
 - [x] Create tool script stubs
+- [x] Phase 0: Connect RV101 via ADB, verify toolchain
+- [x] Phase 0: Document actual device specs (Android 12, SDK 32, 480x640)
+- [x] Phase 0: Deploy HelloHUD test app (2026-02-01)
 
 ### Pending
-- [ ] Phase 0: Connect RV101 via ADB, verify toolchain
-- [ ] Phase 0: Deploy HelloHUD test app
-- [ ] Phase 0: Document actual device specs (Android version, SDK, resolution)
 - [ ] Build shared UI components (GlassesTheme, DpadNavigation)
 - [ ] NowCard MVP
 - [ ] ARPet MVP
@@ -90,16 +90,18 @@ See [docs/DEPLOY_RV101.md](docs/DEPLOY_RV101.md) for detailed instructions.
 
 | Property | Value |
 |----------|-------|
-| Model | Rokid RV101 |
+| Model | RG-glasses (Rokid RV101) |
 | Processor | Qualcomm Snapdragon AR1 |
 | RAM | Up to 2GB LPDDR4x |
-| OS | YodaOS (Android variant) |
-| Android SDK | TBD - measure in Phase 0 |
+| OS | YodaOS (Android 12) |
+| Android SDK | 32 |
 | Display | Green monochrome waveguide |
-| Resolution | TBD - measure in Phase 0 |
-| Density | TBD - measure in Phase 0 |
+| Resolution | 480x640 (portrait) |
+| Density | 240 dpi |
+| CPU ABI | arm64-v8a |
 | Camera | 12MP Sony IMX681, 109° FOV |
 | Weight | 49 grams |
+| Storage | ~18GB available |
 | Dev Cable | 5-pin (required) - 3-pin charging cable does NOT support ADB |
 
 ## Design Constraints for Glasses UI

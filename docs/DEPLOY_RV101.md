@@ -8,20 +8,20 @@
 
 ## Device Specifications
 
-> **Note**: Values marked TBD will be filled after Phase 0 device validation.
-
 | Property | Value |
 |----------|-------|
-| Model | Rokid RV101 |
+| Model | RG-glasses (Rokid RV101) |
 | Processor | Qualcomm Snapdragon AR1 (4x 1.9GHz Kryo) |
 | RAM | Up to 2GB LPDDR4x |
-| OS | YodaOS (Android variant) |
-| Android Version | TBD |
-| SDK Level | TBD |
+| OS | YodaOS (Android 12) |
+| Android Version | 12 |
+| SDK Level | 32 |
 | Display | Green monochrome waveguide |
-| Resolution | TBD |
-| Density | TBD |
+| Resolution | 480x640 |
+| Density | 240 dpi |
+| CPU ABI | arm64-v8a |
 | Camera | 12MP Sony IMX681, 109° FOV |
+| Storage | ~18GB available |
 
 ## Quick Deploy
 
@@ -242,18 +242,20 @@ After connecting device for the first time, run:
 ./tools/device_info.sh
 ```
 
-Document the following in this file:
+Device specs (collected 2026-02-01):
 
-- [ ] Android version: ______
-- [ ] SDK level: ______
-- [ ] Screen resolution: ______
-- [ ] Screen density: ______
-- [ ] ABI (CPU architecture): ______
-- [ ] Available storage: ______
+- [x] Android version: 12
+- [x] SDK level: 32
+- [x] Screen resolution: 480x640
+- [x] Screen density: 240 dpi
+- [x] ABI (CPU architecture): arm64-v8a
+- [x] Available storage: ~18GB
 
 Then deploy HelloHUD:
 
-- [ ] `./tools/install.sh HelloHUD` succeeds
-- [ ] App launches without crash
-- [ ] "HELLO RV101" text is visible
-- [ ] Tick logs appear in logcat every 2 seconds
+- [x] `./tools/install.sh HelloHUD` succeeds
+- [x] App launches without crash
+- [x] "HELLO RV101" text is visible
+- [x] Tick logs appear in logcat every 2 seconds
+
+**Phase 0 completed: 2026-02-01**
